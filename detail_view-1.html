@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>상세페이지</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="app" v-cloak>
+            <h3>공지사항</h3>
+            <form>
+                <div>
+                    게시물번호 {{listForm.sysBoardMasterSeq}}
+                </div>
+                <div>
+                    제목 {{listForm.title}}
+                </div>
+                <div>
+                    작성자 {{listForm.regId}}
+                </div>
+                <div>
+                    <br>
+                    <div v-show="listForm.typeCd=='0'">
+                        {{listForm.typeCd}}
+                    </div>
+                    <br>
+                    <br> {{listForm.cont}}
+                    <br><br>
+                </div>
+                <br>
+                <br>
+                <br>
+                <div>
+                    <input type="button" value="목록" @click="clickBtnList">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+            var userDetailViewPage = new Vue({
+                el: '#app',
+                data: {
+                    listForm: {
+                        cont: '',
+                        title: '',
+                        regId: '',
+                        sysBoardMasterSeq: '',
+                        typeCd: '',
+                    }
+                },
+                created: function() {
+                    onload: {
+                        var qs = util.getQueryStringObject();
+                        var sysBoardMasterSeq = qs.sysBoardMasterSeq;
+                        var typeCd = qs.typeCd;
+                        this.sysBoardMasterSeq = Number(util.null2Str(sysBoardMasterSeq));
+                        var vm = this;
+                        comm.get({
+                            url: "/board/" + sysBoardMasterSeq,
+                            typeCd,
+                            params: {}
+                        }, function(data) {
+                            vm.listForm = data.result;
+                        })
+                    }
+                },
+                methods: {
+                    clickBtnList: function() {
+                        location.href = ("./list.html")
+                    }
+                },
+            });
+    </script>
+</body>
+
+</html>
